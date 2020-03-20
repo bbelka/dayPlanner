@@ -9,8 +9,18 @@ $(".description").click(divClicked);
 $(".saveBtn").click(saveClicked);
 
 //disables save buttons on load until something is entered in corresponding entry div.
+//loads previous inputs
 $(document).ready(function () {
     $(".saveBtn").attr('disabled', 'disabled')
+    $.each($(".description"), function () {
+        var timeValue = $(this).attr('value');
+        console.log(timeValue);
+        var prevAppts = localStorage.getItem(timeValue);
+        console.log(prevAppts);
+        $(this).attr("contenteditable", "true");
+        $(this).append(prevAppts);
+        $(this).prev().removeAttr("contenteditable");
+    })
 });
 
 //displays date at top
@@ -47,13 +57,13 @@ function refresh() {
     $.each($(".description"), function () {
         var hour = now.format("H");
         var timeValue = $(this).attr('value');
-        if (timeValue < hour) {
+        if (parseInt(timeValue) < parseInt(hour)) {
             $(this).addClass('past');
         }
         else if (timeValue === hour) {
             $(this).addClass('present');
         }
-        else if (timeValue > hour) {
+        else if (parseInt(timeValue) > parseInt(hour)) {
             $(this).addClass('future');
         };
     });
