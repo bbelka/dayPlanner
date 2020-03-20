@@ -1,71 +1,66 @@
 var now = moment()
 var divValue
-var saveValue
-var desc8
-var desc9
-var desc10
-var desc11
-var desc12
-var desc13
-var desc14
-var desc15
-var desc16
-var desc17
 var divContent
 
+//appointment div enabled on click
+$(".description").click(divClicked);
 
+//save button click event. Only enalbed when something has been added to corresponding appointment div.
+$(".saveBtn").click(saveClicked);
 
+//disables save buttons on load until something is entered in corresponding entry div.
 $(document).ready(function () {
     $(".saveBtn").attr('disabled', 'disabled')
-    console.log($(".saveBtn"));
 });
 
+//displays date at top
 function displayDate() {
     var eDisplayMoment = document.getElementById('currentDay');
     eDisplayMoment.innerHTML = now.format('dddd, MMMM D, YYYY');
 }
-displayDate();
 
+//makes appointment div editable
+//enables save button
+//continuously saves to localStorage on keyup
 function divClicked() {
     $(this).attr("contenteditable", "true");
     $(this).next().removeAttr("disabled");
     divValue = $(this).attr('value');
-    divContent = $(this).text();
-    console.log(divContent);
-    
+    $(this).keyup(function () {
+        divContent = $(this).text();
+        localStorage.setItem(divValue, divContent);
+    });
 };
 
+//saves appointment content
+//disalbles editability of appointment div until clicked upon
+//stores data to localStorage
 function saveClicked() {
-    saveValue = ($(this).attr('value'))
-    console.log(saveValue);
     divContent = $(this).prev().text();
     $(this).prev().removeAttr("contenteditable");
-    localStorage.setItem(divValue,divContent);
-    // if (value === divValue) {
-        
-    //     console.log(divContent);
-    // }
+    localStorage.setItem(divValue, divContent);
 };
 
-$(".saveBtn").click(saveClicked);
-//     if 
+//porvides color coding of time periods
+//refreshes color coding every 60 seconds
+function refresh() {
+    $.each($(".description"), function () {
+        var hour = now.format("H");
+        var timeValue = $(this).attr('value');
+        if (timeValue < hour) {
+            $(this).addClass('past');
+        }
+        else if (timeValue === hour) {
+            $(this).addClass('present');
+        }
+        else if (timeValue > hour) {
+            $(this).addClass('future');
+        };
+    });
+    setTimeout(refresh, 60000);
+};
+
+refresh();
+displayDate();
 
 
-
-
-//     $.each($(".description"), function () {
-//         // console.log(this)
-//         var desc = this
-//         var hour = now.format("H");
-//         var descID = (this.id);
-//         console.log(descID);
-//         // if (descID < hour) {
-//         //     desc.addClass('past');
-//         // }
-
-//     });
-//     setTimeout(refresh, 60000);
-// };
-// refresh();
-
-$(".description").click(divClicked);
