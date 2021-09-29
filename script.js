@@ -2,27 +2,6 @@ var now = moment()
 var divValue
 var divContent
 
-//appointment div enabled on click
-$(".description").click(divClicked);
-
-//save button click event. Only enalbed when something has been added to corresponding appointment div.
-$(".saveBtn").click(saveClicked);
-
-//disables save buttons on load until something is entered in corresponding entry div.
-//loads previous inputs
-$(document).ready(function () {
-    $(".saveBtn").attr('disabled', 'disabled')
-    $.each($(".description"), function () {
-        var timeValue = $(this).attr('value');
-        console.log(timeValue);
-        var prevAppts = localStorage.getItem(timeValue);
-        console.log(prevAppts);
-        $(this).attr("contenteditable", "true");
-        $(this).append(prevAppts);
-        $(this).prev().removeAttr("contenteditable");
-    })
-});
-
 //displays date at top
 function displayDate() {
     var eDisplayMoment = document.getElementById('currentDay');
@@ -34,7 +13,7 @@ function displayDate() {
 //continuously saves to localStorage on keyup
 function divClicked() {
     $(this).attr("contenteditable", "true");
-    $(this).next().removeAttr("disabled");
+    $(this).next().removeAtdtr("disabled");
     divValue = $(this).attr('value');
     $(this).keyup(function () {
         divContent = $(this).text();
@@ -73,4 +52,23 @@ function refresh() {
 refresh();
 displayDate();
 
+//appointment div enabled on click
+$(".description").click(divClicked);
 
+//save button click event. Only enalbed when something has been added to corresponding appointment div.
+$(".saveBtn").click(saveClicked);
+
+//disables save buttons on load until something is entered in corresponding entry div.
+//loads previous inputs
+$(document).ready(function () {
+    $(".saveBtn").attr('disabled', 'disabled')
+    $.each($(".description"), function () {
+        var timeValue = $(this).attr('value');
+        console.log(timeValue);
+        var prevAppts = localStorage.getItem(timeValue);
+        console.log(prevAppts);
+        $(this).attr("contenteditable", "true");
+        $(this).append(prevAppts);
+        $(this).prev().removeAttr("contenteditable");
+    })
+});
